@@ -6,18 +6,21 @@ import (
 	"time"
 )
 
+// https://wiki.sei.cmu.edu/confluence/display/java/LCK10-J.+Use+a+correct+form+of+the+double-checked+locking+idiom
+// https://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+
 var a uint64
 var mu sync.Mutex
 
 func main() {
-	// go foo()
-	// go foo()
+	go foo()
+	go foo()
 
 	// go fooByAtomic()
 	// go fooByAtomic()
 
-	go fooByMoreScope()
-	go fooByMoreScope()
+	// go fooByMoreScope()
+	// go fooByMoreScope()
 
 	time.Sleep(time.Second)
 }
