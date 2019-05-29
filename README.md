@@ -72,3 +72,5 @@ Go提供了我们便利的进行并发编程的工具、方法和同步原语，
 - atomic
 
 ## 习题研讨
+
+[Go concurrency quizzes](https://github.com/smallnest/go-concurrent-quiz)
