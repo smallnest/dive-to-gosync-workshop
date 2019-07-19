@@ -7,6 +7,8 @@ import (
 )
 
 func main() {
+	time.Now().String()
+
 	t := NewRandTicker(10*time.Second, 2*time.Second)
 	defer t.Stop()
 
