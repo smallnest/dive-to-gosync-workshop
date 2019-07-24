@@ -11,8 +11,12 @@ import (
 func TestWaterFactory(t *testing.T) {
 	var ch chan string
 
-	releaseHydrogen := func() {
+	releaseHydrogen1 := func() {
 		ch <- "H"
+	}
+
+	releaseHydrogen2 := func() {
+		ch <- "h"
 	}
 
 	releaseOxygen := func() {
@@ -29,7 +33,7 @@ func TestWaterFactory(t *testing.T) {
 	go func() {
 		for i := 0; i < N; i++ {
 			time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
-			h2o.hydrogen(releaseHydrogen)
+			h2o.hydrogen(releaseHydrogen1)
 			wg.Done()
 		}
 	}()
@@ -38,7 +42,7 @@ func TestWaterFactory(t *testing.T) {
 	go func() {
 		for i := 0; i < N; i++ {
 			time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
-			h2o.hydrogen(releaseHydrogen)
+			h2o.hydrogen(releaseHydrogen2)
 			wg.Done()
 		}
 	}()
@@ -66,7 +70,7 @@ func TestWaterFactory(t *testing.T) {
 		sort.Strings(s)
 
 		water := s[0] + s[1] + s[2]
-		if water != "HHO" {
+		if water != "HOh" {
 			t.Fatalf("expect a water molecule but got %s", water)
 		}
 	}

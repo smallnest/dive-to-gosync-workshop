@@ -3,22 +3,23 @@ package water
 import (
 	"context"
 
+	"github.com/marusama/cyclicbarrier"
 	"golang.org/x/sync/semaphore"
 )
 
 type H2O struct {
-	semaH   *semaphore.Weighted
-	semaO   *semaphore.Weighted
-	phaser1 chan struct{}
-	phaser2 chan struct{}
+	semaH *semaphore.Weighted
+	semaO *semaphore.Weighted
+	b1    cyclicbarrier.CyclicBarrier
+	b2    cyclicbarrier.CyclicBarrier
 }
 
 func New() *H2O {
 	return &H2O{
-		semaH:   semaphore.NewWeighted(2),
-		semaO:   semaphore.NewWeighted(1),
-		phaser1: make(chan struct{}, 2),
-		phaser2: make(chan struct{}, 2),
+		semaH: semaphore.NewWeighted(2),
+		semaO: semaphore.NewWeighted(1),
+		b1:    cyclicbarrier.New(3),
+		b2:    cyclicbarrier.New(3),
 	}
 }
 
@@ -28,9 +29,8 @@ func (h2o *H2O) hydrogen(releaseHydrogen func()) {
 	// releaseHydrogen() outputs "H". Do not change or remove this line.
 	releaseHydrogen()
 
-	<-h2o.phaser1 //wait oxygen goroutine for preparing oxygen
-
-	<-h2o.phaser2 // wait water molecule
+	h2o.b1.Await(context.Background())
+	h2o.b2.Await(context.Background())
 
 	h2o.semaH.Release(1)
 }
@@ -38,14 +38,11 @@ func (h2o *H2O) hydrogen(releaseHydrogen func()) {
 func (h2o *H2O) oxygen(releaseOxygen func()) {
 	h2o.semaO.Acquire(context.Background(), 1)
 
-	h2o.phaser1 <- struct{}{} // trigger hydrogen goroutine that oxygen is ready
-	h2o.phaser1 <- struct{}{} // trigger another hydrogen goroutine that oxygen is ready
-
+	h2o.b1.Await(context.Background())
 	// releaseOxygen() outputs "O". Do not change or remove this line.
 	releaseOxygen()
 
-	h2o.phaser2 <- struct{}{} // trigger hydrogen goroutine to prepare next water molecule
-	h2o.phaser2 <- struct{}{} // trigger another hydrogen goroutine to prepare next water molecule
+	h2o.b2.Await(context.Background())
 
 	h2o.semaO.Release(1)
 }
