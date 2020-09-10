@@ -40,14 +40,19 @@ func (m *Mutex) Count() int {
 	return int(v)
 }
 
+func (m *Mutex) IsLocked() bool {
+	state := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
+	return state&mutexLocked == mutexLocked
+}
+
 func (m *Mutex) IsWoken() bool {
-	start := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
-	return start&mutexWoken == mutexWoken
+	state := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
+	return state&mutexWoken == mutexWoken
 }
 
 func (m *Mutex) IsStarving() bool {
-	start := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
-	return start&mutexStarving == mutexStarving
+	state := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
+	return state&mutexStarving == mutexStarving
 }
 
 func main() {
