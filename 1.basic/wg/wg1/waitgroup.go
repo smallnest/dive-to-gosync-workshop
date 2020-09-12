@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
-	"sync/atomic"
+	"time"
 )
 
 // https://go101.org/article/concurrent-synchronization-more.html
@@ -12,16 +12,38 @@ import (
 
 // correct or wrong usage
 
+type Counter struct {
+	mu    sync.Mutex
+	count uint64
+}
+
+func (c *Counter) Incr() {
+	c.mu.Lock()
+	c.count++
+	c.mu.Unlock()
+}
+
+func (c *Counter) Count() uint64 {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.count
+}
+
+func worker(c *Counter, wg *sync.WaitGroup) {
+	defer wg.Done()
+	time.Sleep(time.Second)
+	c.Incr()
+}
+
 func main() {
-	var count int64
+	var counter Counter
 	var wg sync.WaitGroup
-	for i := 0; i < 10000; i++ {
-		go func() {
-			wg.Add(1)
-			atomic.AddInt64(&count, 1)
-			wg.Done()
-		}()
+	wg.Add(10)
+
+	for i := 0; i < 10; i++ {
+		go worker(&counter, &wg)
 	}
 	wg.Wait()
-	fmt.Println(atomic.LoadInt64(&count))
+
+	fmt.Println(counter.Count())
 }

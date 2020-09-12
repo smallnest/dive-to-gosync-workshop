@@ -10,10 +10,10 @@ import (
 func main() {
 	var wg sync.WaitGroup
 	wg.Add(4)
-	go dosomething(100, &wg)
-	go dosomething(110, &wg)
-	go dosomething(120, &wg)
-	go dosomething(130, &wg)
+	go dosomething2(100, &wg)
+	go dosomething2(110, &wg)
+	go dosomething2(120, &wg)
+	go dosomething2(130, &wg)
 
 	wg.Wait()
 	fmt.Println("Done")
