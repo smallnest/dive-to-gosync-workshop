@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"sync"
 	"time"
 )
@@ -30,4 +31,13 @@ func main() {
 	})
 
 	fmt.Println("end")
+
+	var addr = "baidu.com"
+
+	var conn net.Conn
+	var err error
+
+	once.Do(func() {
+		conn, err = net.Dial("tcp", addr)
+	})
 }
