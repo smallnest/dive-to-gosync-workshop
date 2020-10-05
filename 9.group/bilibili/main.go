@@ -30,6 +30,7 @@ func main() {
 		}()
 	}
 
+	// 等待所有的子任务完成。理论上10001个子任务都会被完成
 	if err := g.Wait(); err != nil {
 		panic(err)
 	}
