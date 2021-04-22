@@ -26,8 +26,8 @@ func or(channels ...<-chan interface{}) <-chan interface{} {
 		default:
 			m := len(channels) / 2
 			select {
-			case <-or(channels[:m]...):
-			case <-or(channels[m:]...):
+			case <-or(append(channels[:m:m], orDone)...): // must append orDone to avoid leak!!!!
+			case <-or(append(channels[m:], orDone)...):
 			}
 		}
 	}()
@@ -45,7 +45,6 @@ func sig(after time.Duration) <-chan interface{} {
 }
 
 func main() {
-
 	start := time.Now()
 
 	<-or(
