@@ -35,9 +35,9 @@ func (m *Mutex) TryLock() bool {
 
 func (m *Mutex) Count() int {
 	v := atomic.LoadInt32((*int32)(unsafe.Pointer(&m.Mutex)))
-	v = v >> mutexWaiterShift
-	v = v + (v & mutexLocked)
-	return int(v)
+	waiter := v >> mutexWaiterShift
+	waiter = waiter + (v & mutexLocked)
+	return int(waiter)
 }
 
 func (m *Mutex) IsLocked() bool {
