@@ -27,5 +27,5 @@ func main() {
 	}
 	log.Println("Submitted!")
 
-	gw.Stop()
+	gw.Stop(true)
 }

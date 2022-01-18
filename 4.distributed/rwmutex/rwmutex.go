@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/coreos/etcd/clientv3/concurrency"
-	recipe "github.com/coreos/etcd/contrib/recipes"
+	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/client/v3/concurrency"
+	recipe "go.etcd.io/etcd/client/v3/experimental/recipes"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	}
 	defer cli.Close()
 
-	var lockName = "my-lock"
+	lockName := "my-lock"
 
 	var wg sync.WaitGroup
 	wg.Add(20)

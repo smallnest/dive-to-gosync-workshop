@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	hunch "github.com/AaronJan/Hunch"
+	hunch "github.com/aaronjan/hunch"
 )
 
 func main() {

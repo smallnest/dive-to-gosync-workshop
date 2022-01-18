@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
-	recipe "github.com/coreos/etcd/contrib/recipes"
+	clientv3 "go.etcd.io/etcd/client/v3"
+	recipe "go.etcd.io/etcd/client/v3/experimental/recipes"
 )
 
 // Queue implements a multi-reader, multi-writer distributed queue.
@@ -22,7 +22,7 @@ func main() {
 	}
 	defer cli.Close()
 
-	var queueName = "my-queue"
+	queueName := "my-queue"
 
 	var wg sync.WaitGroup
 	wg.Add(20)

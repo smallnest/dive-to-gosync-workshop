@@ -1,9 +1,7 @@
 package main
 
-import "sync"
-
 func main() {
-	var m = make(map[int]int, 10)
+	m := make(map[int]int, 10)
 
 	go func() {
 		for {
@@ -18,6 +16,4 @@ func main() {
 	}()
 
 	select {}
-
-	var mm sync.Map
 }

@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/coreos/etcd/clientv3/concurrency"
-	recipe "github.com/coreos/etcd/contrib/recipes"
+	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/client/v3/concurrency"
+	recipe "go.etcd.io/etcd/client/v3/experimental/recipes"
 )
 
 func main() {
@@ -25,7 +25,7 @@ func barrier() {
 	}
 	defer cli.Close()
 
-	var barrierName = "my-test"
+	barrierName := "my-test"
 
 	b := recipe.NewBarrier(cli, barrierName)
 	err = b.Hold()
@@ -74,7 +74,7 @@ func doubleBarrier() {
 	}
 	defer s.Close()
 
-	var barrierName = "my-test"
+	barrierName := "my-test"
 
 	var wg sync.WaitGroup
 	wg.Add(10)

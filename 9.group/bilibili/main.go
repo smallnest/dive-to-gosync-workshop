@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/bilibili/kratos/pkg/sync/errgroup"
+	"github.com/go-kratos/kratos/pkg/sync/errgroup"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 
 	var count int64
 	g.Go(func(ctx context.Context) error {
-		time.Sleep(time.Second) //睡眠5秒，把这个goroutine占住
+		time.Sleep(time.Second) // 睡眠5秒，把这个goroutine占住
 		return nil
 	})
 

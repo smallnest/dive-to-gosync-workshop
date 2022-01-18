@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/coreos/etcd/clientv3/concurrency"
+	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.etcd.io/etcd/client/v3/concurrency"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	}
 	defer cli.Close()
 
-	var electName = "/my-election/"
+	electName := "/my-election/"
 
 	go watch(cli, electName)
 

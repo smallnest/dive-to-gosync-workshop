@@ -10,7 +10,7 @@ import (
 func main() {
 	var once sync.Once
 
-	var count = 0
+	count := 0
 	go func() {
 		defer func() {
 			count++
@@ -20,7 +20,6 @@ func main() {
 			fmt.Println("exec Do")
 			count = 1 / count
 		})
-
 	}()
 
 	time.Sleep(time.Second)
@@ -32,7 +31,7 @@ func main() {
 
 	fmt.Println("end")
 
-	var addr = "baidu.com"
+	addr := "baidu.com"
 
 	var conn net.Conn
 	var err error
@@ -40,4 +39,7 @@ func main() {
 	once.Do(func() {
 		conn, err = net.Dial("tcp", addr)
 	})
+
+	_ = conn
+	_ = err
 }
