@@ -5,7 +5,6 @@ import (
 	"log"
 	"math/rand"
 	"sort"
-	"sync"
 	"time"
 
 	"github.com/marusama/cyclicbarrier"
@@ -68,40 +67,32 @@ func main() {
 	N := 10
 	ch = make(chan string, M*N*3)
 	h2o := New()
-	var wg sync.WaitGroup
 
-	wg.Add(3*M*N - 3)
 	for k := 0; k < M; k++ {
 		go func() {
 			for i := 0; i < N; i++ {
 				time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
 				h2o.hydrogen(releaseHydrogen)
-				wg.Done()
 			}
 		}()
 		go func() {
 			for i := 0; i < N; i++ {
 				time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
 				h2o.hydrogen(releaseHydrogen)
-				wg.Done()
 			}
 		}()
 		go func() {
 			for i := 0; i < N; i++ {
 				time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
 				h2o.oxygen(releaseOxygen)
-				wg.Done()
 			}
 		}()
 	}
 
-	wg.Wait()
+	time.Sleep(5 * time.Second)
 
-	if len(ch) < M*N*3-3 {
-		log.Panicf("expect %d atom but got %d", M*N*3-3, len(ch))
-	}
 	s := make([]string, 3)
-	for i := 0; i < M*N-1; i++ {
+	for i := 0; i < len(ch)/3; i++ {
 		s[0] = <-ch
 		s[1] = <-ch
 		s[2] = <-ch
