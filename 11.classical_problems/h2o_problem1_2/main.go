@@ -40,20 +40,19 @@ func New() *H2O {
 
 // 被氢原子goroutine调用，满足条件的时候就会提供一个H原子来产生一个水分子.
 func (h2o *H2O) hydrogen(releaseHydrogen func()) {
-	h2o.semaO.Acquire(1)
-
+	h2o.semaH.Acquire(1)
 	releaseHydrogen()
 
-	h2o.semaH.Release(1)
+	h2o.semaO.Release(1)
 }
 
 // 被氧原子goroutine调用,满足条件的时候就会一个O原子来产生一个水分子.
 func (h2o *H2O) oxygen(releaseOxygen func()) {
-	h2o.semaH.Acquire(2)
+	h2o.semaO.Acquire(2)
 
 	releaseOxygen()
 
-	h2o.semaO.Release(2)
+	h2o.semaH.Release(2)
 }
 
 func main() {
