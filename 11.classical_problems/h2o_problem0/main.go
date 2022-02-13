@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math/rand"
 	"sort"
@@ -56,9 +57,11 @@ func main() {
 	var ch chan string
 	releaseHydrogen := func() {
 		ch <- "H"
+		fmt.Print("H")
 	}
 	releaseOxygen := func() {
 		ch <- "O"
+		fmt.Print("O")
 	}
 
 	// goroutine数

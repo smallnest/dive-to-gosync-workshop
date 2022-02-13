@@ -47,6 +47,7 @@ func (p *Philosopher) dine() {
 		p.leftChopstick.Lock() // 先尝试拿起左手边的筷子
 		mark(p, "拿起左手筷子")
 		p.rightChopstick.Lock() // 再尝试拿起右手边的筷子
+		mark(p, "拿起右手筷子")
 
 		mark(p, "用膳")
 		randomPause(10)
