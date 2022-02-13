@@ -40,7 +40,7 @@ func (p *Philosopher) dine() {
 		randomPause(10)
 
 		mark(p, "饿了")
-		if p.ID == 4 { //
+		if p.ID == 5 { //
 			p.rightChopstick.Lock() // 先尝试拿起第1只筷子
 			mark(p, "拿起左手筷子")
 			p.leftChopstick.Lock() // 再尝试拿起第5只筷子
