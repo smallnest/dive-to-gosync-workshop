@@ -64,7 +64,7 @@ func customers() {
 	for {
 		randomPause(1000)
 
-		customer()
+		go customer()
 	}
 }
 
