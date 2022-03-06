@@ -41,12 +41,6 @@ var (
 	sofaSema Semaphore = make(chan struct{}, 4)
 )
 
-// 理发师
-var (
-	// 三位理发师
-	barberSema Semaphore = make(chan struct{}, 3)
-)
-
 // 收银台
 var (
 	// 同时只有一对理发师和顾客结账
