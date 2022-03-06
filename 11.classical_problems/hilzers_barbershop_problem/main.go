@@ -77,7 +77,7 @@ func barber(name string) {
 // 模拟顾客陆陆续续的过来
 func customers() {
 	for {
-		randomPause(1000)
+		randomPause(500)
 
 		go customer()
 	}
@@ -91,6 +91,7 @@ func customer() {
 		customerMutex.Unlock()
 		return
 	}
+	customerCount++
 	customerMutex.Unlock()
 
 	log.Println("一位顾客开始等沙发坐下")
@@ -101,6 +102,10 @@ func customer() {
 	log.Println("一位顾客已付完钱")
 	receiptSema.Acquire()
 	log.Println("一位顾客拿到发票，离开")
+
+	customerMutex.Lock()
+	customerCount--
+	customerMutex.Unlock()
 }
 
 func randomPause(max int) {
