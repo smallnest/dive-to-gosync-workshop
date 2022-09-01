@@ -1,6 +1,6 @@
 module github.com/smallnest/dive-to-gosync-workshop
 
-go 1.17
+go 1.19
 
 require (
 	github.com/aaronjan/hunch v1.1.2
