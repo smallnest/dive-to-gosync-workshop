@@ -32,7 +32,6 @@ import (
 type FizzBuzz struct {
 	n int
 
-	v       int
 	barrier cyclicbarrier.CyclicBarrier
 	wg      sync.WaitGroup
 }
@@ -52,8 +51,6 @@ func (fb *FizzBuzz) start() {
 	go fb.fizzbuzz()
 	go fb.number()
 
-	fb.v++
-
 	fb.wg.Wait()
 }
 
@@ -61,10 +58,10 @@ func (fb *FizzBuzz) fizz() {
 	defer fb.wg.Done()
 
 	ctx := context.Background()
+	v := 0
 	for {
 		fb.barrier.Await(ctx)
-
-		v := fb.v
+		v++
 
 		if v > fb.n {
 			return
@@ -80,8 +77,6 @@ func (fb *FizzBuzz) fizz() {
 			} else {
 				fmt.Print(" fizz,")
 			}
-
-			fb.v++
 		}
 
 	}
@@ -91,10 +86,11 @@ func (fb *FizzBuzz) buzz() {
 	defer fb.wg.Done()
 
 	ctx := context.Background()
+
+	v := 0
 	for {
 		fb.barrier.Await(ctx)
-
-		v := fb.v
+		v++
 
 		if v > fb.n {
 			return
@@ -110,8 +106,6 @@ func (fb *FizzBuzz) buzz() {
 			} else {
 				fmt.Print(" buzz,")
 			}
-
-			fb.v++
 		}
 	}
 }
@@ -119,10 +113,10 @@ func (fb *FizzBuzz) fizzbuzz() {
 	defer fb.wg.Done()
 
 	ctx := context.Background()
+	v := 0
 	for {
 		fb.barrier.Await(ctx)
-
-		v := fb.v
+		v++
 
 		if v > fb.n {
 			return
@@ -134,9 +128,6 @@ func (fb *FizzBuzz) fizzbuzz() {
 			} else {
 				fmt.Print(" fizzbuzz,")
 			}
-
-			fb.v++
-			continue
 		}
 	}
 }
@@ -144,10 +135,10 @@ func (fb *FizzBuzz) number() {
 	defer fb.wg.Done()
 
 	ctx := context.Background()
+	v := 0
 	for {
 		fb.barrier.Await(ctx)
-
-		v := fb.v
+		v++
 
 		if v > fb.n {
 			return
@@ -159,9 +150,6 @@ func (fb *FizzBuzz) number() {
 			} else {
 				fmt.Printf(" %d,", v)
 			}
-
-			fb.v++
-			continue
 		}
 
 	}
