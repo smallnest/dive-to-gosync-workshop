@@ -6,6 +6,8 @@ import (
 )
 
 // https://github.com/golang/go/issues/56102#issuecomment-1311857716
+// https://github.com/adg/sync/blob/main/once.go
+// https://github.com/carlmjohnson/syncx/blob/main/once.go
 
 func main() {
 	pi := OnceValue(func() float64 { return 3.14 })
