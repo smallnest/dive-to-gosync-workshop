@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 
-func orDone(done <-chan struct{}, c <-chan interface{}) <-chan interface{} {
-	valStream := make(chan interface{})
+func orDone(done <-chan struct{}, c <-chan any) <-chan any {
+	valStream := make(chan any)
 	go func() {
 		defer close(valStream)
 		for {
@@ -25,7 +25,7 @@ func orDone(done <-chan struct{}, c <-chan interface{}) <-chan interface{} {
 }
 
 func main() {
-	ch := make(chan interface{})
+	ch := make(chan any)
 	go func() {
 		defer close(ch)
 

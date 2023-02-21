@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-func fanOut(ch <-chan interface{}, out []chan interface{}, async bool) {
+func fanOut(ch <-chan any, out []chan any, async bool) {
 	go func() {
 		defer func() {
 			for i := 0; i < len(out); i++ {
@@ -29,7 +29,7 @@ func fanOut(ch <-chan interface{}, out []chan interface{}, async bool) {
 	}()
 }
 
-func fanOutReflect(ch <-chan interface{}, out []chan interface{}) {
+func fanOutReflect(ch <-chan any, out []chan any) {
 	go func() {
 		defer func() {
 			for i := 0; i < len(out); i++ {
@@ -57,8 +57,8 @@ func fanOutReflect(ch <-chan interface{}, out []chan interface{}) {
 	}()
 }
 
-func asStream(done <-chan struct{}) <-chan interface{} {
-	s := make(chan interface{})
+func asStream(done <-chan struct{}) <-chan any {
+	s := make(chan any)
 	values := []int{1, 2, 3, 4, 5}
 	go func() {
 		defer close(s)
@@ -77,11 +77,11 @@ func asStream(done <-chan struct{}) <-chan interface{} {
 
 func main() {
 	source := asStream(nil)
-	channels := make([]chan interface{}, 5)
+	channels := make([]chan any, 5)
 
 	fmt.Println("fanOut")
 	for i := 0; i < 5; i++ {
-		channels[i] = make(chan interface{})
+		channels[i] = make(chan any)
 	}
 	fanOut(source, channels, false)
 	for i := 0; i < 5; i++ {
@@ -93,7 +93,7 @@ func main() {
 	fmt.Println("fanOut By Reflect")
 	source = asStream(nil)
 	for i := 0; i < 5; i++ {
-		channels[i] = make(chan interface{})
+		channels[i] = make(chan any)
 	}
 	fanOutReflect(source, channels)
 	for i := 0; i < 5; i++ {

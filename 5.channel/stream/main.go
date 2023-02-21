@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-func asStream(done <-chan struct{}, values ...interface{}) <-chan interface{} {
-	s := make(chan interface{})
+func asStream[T any](done <-chan struct{}, values ...T) <-chan T {
+	s := make(chan T)
 	go func() {
 		defer close(s)
 
@@ -20,8 +20,8 @@ func asStream(done <-chan struct{}, values ...interface{}) <-chan interface{} {
 	}()
 	return s
 }
-func asRepeatStream(done <-chan struct{}, values ...interface{}) <-chan interface{} {
-	s := make(chan interface{})
+func asRepeatStream[T any](done <-chan struct{}, values ...T) <-chan T {
+	s := make(chan T)
 	go func() {
 		defer close(s)
 		for {
@@ -37,8 +37,8 @@ func asRepeatStream(done <-chan struct{}, values ...interface{}) <-chan interfac
 	return s
 }
 
-func takeN(done <-chan struct{}, valueStream <-chan interface{}, num int) <-chan interface{} {
-	takeStream := make(chan interface{})
+func takeN[T any](done <-chan struct{}, valueStream <-chan T, num int) <-chan T {
+	takeStream := make(chan T)
 	go func() {
 		defer close(takeStream)
 		for i := 0; i < num; i++ {
@@ -52,8 +52,8 @@ func takeN(done <-chan struct{}, valueStream <-chan interface{}, num int) <-chan
 	return takeStream
 }
 
-func takeFn(done <-chan struct{}, valueStream <-chan interface{}, fn func(interface{}) bool) <-chan interface{} {
-	takeStream := make(chan interface{})
+func takeFn[T any](done <-chan struct{}, valueStream <-chan T, fn func(any) bool) <-chan T {
+	takeStream := make(chan T)
 	go func() {
 		defer close(takeStream)
 		for {
@@ -70,8 +70,8 @@ func takeFn(done <-chan struct{}, valueStream <-chan interface{}, fn func(interf
 	return takeStream
 }
 
-func takeWhile(done <-chan struct{}, valueStream <-chan interface{}, fn func(interface{}) bool) <-chan interface{} {
-	takeStream := make(chan interface{})
+func takeWhile[T any](done <-chan struct{}, valueStream <-chan T, fn func(any) bool) <-chan T {
+	takeStream := make(chan T)
 	go func() {
 		defer close(takeStream)
 		for {
@@ -89,8 +89,8 @@ func takeWhile(done <-chan struct{}, valueStream <-chan interface{}, fn func(int
 	return takeStream
 }
 
-func skipN(done <-chan struct{}, valueStream <-chan interface{}, num int) <-chan interface{} {
-	takeStream := make(chan interface{})
+func skipN[T any](done <-chan struct{}, valueStream <-chan T, num int) <-chan T {
+	takeStream := make(chan T)
 	go func() {
 		defer close(takeStream)
 		for i := 0; i < num; i++ {
@@ -112,8 +112,8 @@ func skipN(done <-chan struct{}, valueStream <-chan interface{}, num int) <-chan
 	return takeStream
 }
 
-func skipFn(done <-chan struct{}, valueStream <-chan interface{}, fn func(interface{}) bool) <-chan interface{} {
-	takeStream := make(chan interface{})
+func skipFn[T any](done <-chan struct{}, valueStream <-chan T, fn func(any) bool) <-chan T {
+	takeStream := make(chan T)
 	go func() {
 		defer close(takeStream)
 		for {
@@ -130,8 +130,8 @@ func skipFn(done <-chan struct{}, valueStream <-chan interface{}, fn func(interf
 	return takeStream
 }
 
-func skipWhile(done <-chan struct{}, valueStream <-chan interface{}, fn func(interface{}) bool) <-chan interface{} {
-	takeStream := make(chan interface{})
+func skipWhile[T any](done <-chan struct{}, valueStream <-chan T, fn func(any) bool) <-chan T {
+	takeStream := make(chan T)
 	go func() {
 		defer close(takeStream)
 		take := false
@@ -179,10 +179,10 @@ func main() {
 		fmt.Println(v)
 	}
 
-	evenFn := func(v interface{}) bool {
+	evenFn := func(v any) bool {
 		return v.(int)%2 == 0
 	}
-	lessFn := func(v interface{}) bool {
+	lessFn := func(v any) bool {
 		return v.(int) < 3
 	}
 

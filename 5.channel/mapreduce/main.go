@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 
-func mapChan(in <-chan interface{}, fn func(interface{}) interface{}) <-chan interface{} {
-	out := make(chan interface{})
+func mapChan[T, K any](in <-chan T, fn func(T) K) <-chan K {
+	out := make(chan K)
 	if in == nil {
 		close(out)
 		return out
@@ -20,12 +20,13 @@ func mapChan(in <-chan interface{}, fn func(interface{}) interface{}) <-chan int
 	return out
 }
 
-func reduce(in <-chan interface{}, fn func(r, v interface{}) interface{}) interface{} {
+func reduce[T, K any](in <-chan T, fn func(r K, v T) K) K {
+	var out K
+
 	if in == nil {
-		return nil
+		return out
 	}
 
-	out := <-in
 	for v := range in {
 		out = fn(out, v)
 	}
@@ -33,8 +34,8 @@ func reduce(in <-chan interface{}, fn func(r, v interface{}) interface{}) interf
 	return out
 }
 
-func asStream(done <-chan struct{}) <-chan interface{} {
-	s := make(chan interface{})
+func asStream(done <-chan struct{}) <-chan int {
+	s := make(chan int)
 	values := []int{1, 2, 3, 4, 5}
 	go func() {
 		defer close(s)
@@ -55,13 +56,13 @@ func main() {
 	in := asStream(nil)
 
 	// map op: time 10
-	mapFn := func(v interface{}) interface{} {
-		return v.(int) * 10
+	mapFn := func(v int) int {
+		return v * 10
 	}
 
 	// reduce op: sum
-	reduceFn := func(r, v interface{}) interface{} {
-		return r.(int) + v.(int)
+	reduceFn := func(r, v int) int {
+		return r + v
 	}
 
 	sum := reduce(mapChan(in, mapFn), reduceFn)

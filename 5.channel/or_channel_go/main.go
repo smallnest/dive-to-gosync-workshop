@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-func or(chans ...<-chan interface{}) <-chan interface{} {
-	out := make(chan interface{})
+func or(chans ...<-chan any) <-chan any {
+	out := make(chan any)
 	go func() {
 		var once sync.Once
 		for _, c := range chans {
-			go func(c <-chan interface{}) {
+			go func(c <-chan any) {
 				select {
 				case <-c:
 					once.Do(func() { close(out) })
@@ -24,8 +24,8 @@ func or(chans ...<-chan interface{}) <-chan interface{} {
 }
 
 func main() {
-	sig := func(after time.Duration) <-chan interface{} {
-		c := make(chan interface{})
+	sig := func(after time.Duration) <-chan any {
+		c := make(chan any)
 		go func() {
 			defer close(c)
 			time.Sleep(after)

@@ -47,7 +47,7 @@ func testDist() {
 	}()
 
 	for i := 0; i < 6; i++ {
-		var v interface{}
+		var v any
 		var j int
 		select {
 		case v = <-outputs[0].Out():
@@ -85,7 +85,7 @@ func testTee() {
 	}()
 
 	for i := 0; i < 20; i++ {
-		var v interface{}
+		var v any
 		var j int
 		select {
 		case v = <-outputs[0].Out():

@@ -8,14 +8,14 @@ import (
 
 // https://github.com/campoy/justforfunc/blob/master/27-merging-chans/main.go
 
-func fanIn(chans ...<-chan interface{}) <-chan interface{} {
-	out := make(chan interface{})
+func fanIn(chans ...<-chan any) <-chan any {
+	out := make(chan any)
 	go func() {
 		var wg sync.WaitGroup
 		wg.Add(len(chans))
 
 		for _, c := range chans {
-			go func(c <-chan interface{}) {
+			go func(c <-chan any) {
 				for v := range c {
 					out <- v
 				}
@@ -29,8 +29,8 @@ func fanIn(chans ...<-chan interface{}) <-chan interface{} {
 	return out
 }
 
-func fanInReflect(chans ...<-chan interface{}) <-chan interface{} {
-	out := make(chan interface{})
+func fanInReflect(chans ...<-chan any) <-chan any {
+	out := make(chan any)
 	go func() {
 		defer close(out)
 		var cases []reflect.SelectCase
@@ -54,10 +54,10 @@ func fanInReflect(chans ...<-chan interface{}) <-chan interface{} {
 
 }
 
-func fanInRec(chans ...<-chan interface{}) <-chan interface{} {
+func fanInRec(chans ...<-chan any) <-chan any {
 	switch len(chans) {
 	case 0:
-		c := make(chan interface{})
+		c := make(chan any)
 		close(c)
 		return c
 	case 1:
@@ -72,8 +72,8 @@ func fanInRec(chans ...<-chan interface{}) <-chan interface{} {
 	}
 }
 
-func mergeTwo(a, b <-chan interface{}) <-chan interface{} {
-	c := make(chan interface{})
+func mergeTwo(a, b <-chan any) <-chan any {
+	c := make(chan any)
 
 	go func() {
 		defer close(c)
@@ -97,8 +97,8 @@ func mergeTwo(a, b <-chan interface{}) <-chan interface{} {
 	return c
 }
 
-func asStream(done <-chan struct{}) <-chan interface{} {
-	s := make(chan interface{})
+func asStream(done <-chan struct{}) <-chan any {
+	s := make(chan any)
 	values := []int{1, 2, 3, 4, 5}
 	go func() {
 		defer close(s)

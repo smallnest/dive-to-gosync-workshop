@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func or(channels ...<-chan interface{}) <-chan interface{} {
+func or(channels ...<-chan any) <-chan any {
 	switch len(channels) {
 	case 0:
 		return nil
@@ -13,7 +13,7 @@ func or(channels ...<-chan interface{}) <-chan interface{} {
 		return channels[0]
 	}
 
-	orDone := make(chan interface{})
+	orDone := make(chan any)
 	go func() {
 		defer close(orDone)
 
@@ -35,8 +35,8 @@ func or(channels ...<-chan interface{}) <-chan interface{} {
 	return orDone
 }
 
-func sig(after time.Duration) <-chan interface{} {
-	c := make(chan interface{})
+func sig(after time.Duration) <-chan any {
+	c := make(chan any)
 	go func() {
 		defer close(c)
 		time.Sleep(after)

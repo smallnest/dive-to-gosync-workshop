@@ -54,6 +54,6 @@ func main() {
 	}
 }
 
-func panicf(format string, a ...interface{}) {
+func panicf(format string, a ...any) {
 	panic(fmt.Sprintf(format, a...))
 }

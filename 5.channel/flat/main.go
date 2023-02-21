@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-func orDone(done <-chan struct{}, c <-chan interface{}) <-chan interface{} {
-	valStream := make(chan interface{})
+func orDone(done <-chan struct{}, c <-chan any) <-chan any {
+	valStream := make(chan any)
 	go func() {
 		defer close(valStream)
 		for {
@@ -25,12 +25,12 @@ func orDone(done <-chan struct{}, c <-chan interface{}) <-chan interface{} {
 	}()
 	return valStream
 }
-func flat(done <-chan struct{}, chanStream <-chan <-chan interface{}) <-chan interface{} {
-	valStream := make(chan interface{})
+func flat(done <-chan struct{}, chanStream <-chan <-chan any) <-chan any {
+	valStream := make(chan any)
 	go func() {
 		defer close(valStream)
 		for {
-			var stream <-chan interface{}
+			var stream <-chan any
 			select {
 			case maybeStream, ok := <-chanStream:
 				if ok == false {
@@ -53,12 +53,12 @@ func flat(done <-chan struct{}, chanStream <-chan <-chan interface{}) <-chan int
 
 func main() {
 
-	genVals := func() <-chan <-chan interface{} {
-		chanStream := make(chan (<-chan interface{}))
+	genVals := func() <-chan <-chan any {
+		chanStream := make(chan (<-chan any))
 		go func() {
 			defer close(chanStream)
 			for i := 0; i < 10; i++ {
-				stream := make(chan interface{}, 1)
+				stream := make(chan any, 1)
 				stream <- i
 				close(stream)
 				chanStream <- stream

@@ -29,7 +29,7 @@ func (m *Mutex) TryLock(timeout time.Duration) bool {
 	case <-m.ch:
 		timer.Stop()
 		return true
-	case <-time.After(timeout):
+	case <-timer.C:
 	}
 	return false
 }
